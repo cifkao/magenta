@@ -14,6 +14,8 @@
 
 """A setuptools based setup module for magenta."""
 
+import sys
+
 from setuptools import find_packages
 from setuptools import setup
 
@@ -24,107 +26,46 @@ from setuptools import setup
 with open('magenta/version.py') as in_file:
   exec(in_file.read())  # pylint: disable=exec-used
 
+if '--gpu' in sys.argv:
+  gpu_mode = True
+  sys.argv.remove('--gpu')
+else:
+  gpu_mode = False
+
 REQUIRED_PACKAGES = [
     'IPython',
-    'Pillow >= 3.4.2',
     'absl-py',
-    'attrs',
     'backports.tempfile',
     'bokeh >= 0.12.0',
-    # Temporary fix for gast issue with TF.
-    # Details:
-    # https://github.com/tensorflow/tensorflow/issues/32319
-    # https://github.com/tensorflow/tensorflow/commit/c72125bd59858ec82a9238b232bbd77c45889c5a
-    'gast == 0.2.2',
     'intervaltree >= 2.1.0',
-    'joblib >= 0.12',
     'librosa >= 0.6.2',
-    'matplotlib >= 1.5.3',
     'mido == 1.2.6',
-    'mir_eval >= 0.4',
     'numpy >= 1.14.6',  # 1.14.6 is required for colab compatibility.
     'pandas >= 0.18.1',
     'pretty_midi >= 0.2.6',
     'protobuf >= 3.6.1',
-    'pygtrie >= 2.3',
-    'python-rtmidi >= 1.1, < 1.2',  # 1.2 breaks us
-    'scikit-image',
-    'scipy >= 0.18.1',
+    'scipy >= 0.18.1, <= 1.2.0',  # 1.2.1 causes segfaults in pytest.
     'six >= 1.12.0',
-    'sk-video',
-    'dm-sonnet < 2.0.0',  # Sonnet 2 requires TF2.
-    'sox >= 1.3.7',
-    'tensorflow >= 1.15.0, < 2.0.0',  # Magenta is not yet TF2 compatible.
-    'tensorflow-datasets >= 1.0.2',
-    'tensorflow-probability == 0.7.0',
-    'tensor2tensor >= 1.13.4',
     'wheel',
     'futures;python_version=="2.7"',
-    'apache-beam[gcp] >= 2.14.0',
+    'apache-beam[gcp] >= 2.8.0;python_version=="2.7"',
 ]
 
+if gpu_mode:
+  REQUIRED_PACKAGES.append('tensorflow-gpu >= 1.0.0, < 2.0.0')
+else:
+  REQUIRED_PACKAGES.append('tensorflow >= 1.0.0, < 2.0.0')
+
 EXTRAS_REQUIRE = {
-    'onsets_frames_realtime': [
-        'pyaudio',
-        'colorama',
-        'tflite',
-    ],
 }
 
 # pylint:disable=line-too-long
 CONSOLE_SCRIPTS = [
-    'magenta.interfaces.midi.magenta_midi',
-    'magenta.interfaces.midi.midi_clock',
-    'magenta.models.arbitrary_image_stylization.arbitrary_image_stylization_evaluate',
-    'magenta.models.arbitrary_image_stylization.arbitrary_image_stylization_train',
-    'magenta.models.arbitrary_image_stylization.arbitrary_image_stylization_with_weights',
-    'magenta.models.arbitrary_image_stylization.arbitrary_image_stylization_distill_mobilenet',
-    'magenta.models.drums_rnn.drums_rnn_create_dataset',
-    'magenta.models.drums_rnn.drums_rnn_generate',
-    'magenta.models.drums_rnn.drums_rnn_train',
-    'magenta.models.image_stylization.image_stylization_create_dataset',
-    'magenta.models.image_stylization.image_stylization_evaluate',
-    'magenta.models.image_stylization.image_stylization_finetune',
-    'magenta.models.image_stylization.image_stylization_train',
-    'magenta.models.image_stylization.image_stylization_transform',
-    'magenta.models.improv_rnn.improv_rnn_create_dataset',
-    'magenta.models.improv_rnn.improv_rnn_generate',
-    'magenta.models.improv_rnn.improv_rnn_train',
-    'magenta.models.gansynth.gansynth_train',
-    'magenta.models.gansynth.gansynth_generate',
-    'magenta.models.melody_rnn.melody_rnn_create_dataset',
-    'magenta.models.melody_rnn.melody_rnn_generate',
-    'magenta.models.melody_rnn.melody_rnn_train',
-    'magenta.models.music_vae.music_vae_generate',
-    'magenta.models.music_vae.music_vae_train',
-    'magenta.models.nsynth.wavenet.nsynth_generate',
-    'magenta.models.nsynth.wavenet.nsynth_save_embeddings',
-    'magenta.models.onsets_frames_transcription.onsets_frames_transcription_create_dataset_maps',
-    'magenta.models.onsets_frames_transcription.onsets_frames_transcription_create_dataset_maestro',
-    'magenta.models.onsets_frames_transcription.onsets_frames_transcription_infer',
-    'magenta.models.onsets_frames_transcription.onsets_frames_transcription_train',
-    'magenta.models.onsets_frames_transcription.onsets_frames_transcription_transcribe',
-    'magenta.models.onsets_frames_transcription.realtime.onsets_frames_transcription_realtime',
-    'magenta.models.performance_rnn.performance_rnn_create_dataset',
-    'magenta.models.performance_rnn.performance_rnn_generate',
-    'magenta.models.performance_rnn.performance_rnn_train',
-    'magenta.models.pianoroll_rnn_nade.pianoroll_rnn_nade_create_dataset',
-    'magenta.models.pianoroll_rnn_nade.pianoroll_rnn_nade_generate',
-    'magenta.models.pianoroll_rnn_nade.pianoroll_rnn_nade_train',
-    'magenta.models.polyphony_rnn.polyphony_rnn_create_dataset',
-    'magenta.models.polyphony_rnn.polyphony_rnn_generate',
-    'magenta.models.polyphony_rnn.polyphony_rnn_train',
-    'magenta.models.rl_tuner.rl_tuner_train',
-    'magenta.models.sketch_rnn.sketch_rnn_train',
-    'magenta.scripts.convert_dir_to_note_sequences',
-    'magenta.tensor2tensor.t2t_datagen',
-    'magenta.tensor2tensor.t2t_decoder',
-    'magenta.tensor2tensor.t2t_trainer',
 ]
 # pylint:enable=line-too-long
 
 setup(
-    name='magenta',
+    name='magenta.music',
     version=__version__,  # pylint: disable=undefined-variable
     description='Use machine learning to create art and music',
     long_description='',
@@ -156,9 +97,7 @@ setup(
     },
 
     include_package_data=True,
-    package_data={
-        'magenta': ['models/image_stylization/evaluation_images/*.jpg'],
-    },
+    package_data={},
     setup_requires=['pytest-runner', 'pytest-pylint'],
     tests_require=[
         'pytest >= 5.2.0',
