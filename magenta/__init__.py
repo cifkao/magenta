@@ -12,24 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-r"""Pulls in all magenta libraries that are in the public API.
-
-To regenerate this list based on the py_library dependencies of //magenta:
-bazel query 'kind(py_library, deps(//magenta))' | \
-  grep '//magenta' | \
-  egrep  -v "/([^:/]+):\1$" | \
-  sed -e 's/\/\//import /' -e 's/\//./' -e 's/:/./' -e  's/py_pb2/pb2/' | \
-  LANG=C sort
-"""
-# TODO(adarob): Remove these imports once moved to /py internally.
-
-import magenta.common.beam_search
-import magenta.common.concurrency
-import magenta.common.nade
-import magenta.common.sequence_example_lib
-import magenta.common.state_util
-import magenta.common.testing_lib
-import magenta.common.tf_utils
 import magenta.music.abc_parser
 import magenta.music.audio_io
 import magenta.music.chord_symbols_lib
@@ -58,14 +40,6 @@ import magenta.music.protobuf.generator_pb2
 import magenta.music.protobuf.music_pb2
 import magenta.music.sequences_lib
 import magenta.music.testing_lib
-import magenta.pipelines.dag_pipeline
-import magenta.pipelines.drum_pipelines
-import magenta.pipelines.lead_sheet_pipelines
-import magenta.pipelines.melody_pipelines
-import magenta.pipelines.note_sequence_pipelines
-import magenta.pipelines.pipeline
-import magenta.pipelines.pipelines_common
-import magenta.pipelines.statistics
 import magenta.version
 
 from magenta.version import __version__
