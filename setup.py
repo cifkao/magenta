@@ -26,12 +26,6 @@ from setuptools import setup
 with open('magenta/version.py') as in_file:
   exec(in_file.read())  # pylint: disable=exec-used
 
-if '--gpu' in sys.argv:
-  gpu_mode = True
-  sys.argv.remove('--gpu')
-else:
-  gpu_mode = False
-
 REQUIRED_PACKAGES = [
     'IPython',
     'absl-py',
@@ -50,11 +44,6 @@ REQUIRED_PACKAGES = [
     'futures;python_version=="2.7"',
     'apache-beam[gcp] >= 2.8.0;python_version=="2.7"',
 ]
-
-if gpu_mode:
-  REQUIRED_PACKAGES.append('tensorflow-gpu >= 1.0.0, < 2.0.0')
-else:
-  REQUIRED_PACKAGES.append('tensorflow >= 1.0.0, < 2.0.0')
 
 EXTRAS_REQUIRE = {
 }
