@@ -17,7 +17,11 @@
 import hashlib
 
 from magenta.music.protobuf import music_pb2
-import tensorflow as tf
+
+try:
+  from tensorflow.io import TFRecordWriter, tf_record_iterator
+except ImportError:
+  from tensorflow.python_io import TFRecordWriter, tf_record_iterator
 
 
 def generate_note_sequence_id(filename, collection_name, source_type):
@@ -52,12 +56,12 @@ def note_sequence_record_iterator(path):
   Raises:
     IOError: If `path` cannot be opened for reading.
   """
-  reader = tf.python_io.tf_record_iterator(path)
+  reader = tf_record_iterator(path)
   for serialized_sequence in reader:
     yield music_pb2.NoteSequence.FromString(serialized_sequence)
 
 
-class NoteSequenceRecordWriter(tf.io.TFRecordWriter):
+class NoteSequenceRecordWriter(TFRecordWriter):
   """A class to write serialized NoteSequence protos to a TFRecord file.
 
   This class implements `__enter__` and `__exit__`, and can be used in `with`
@@ -74,4 +78,4 @@ class NoteSequenceRecordWriter(tf.io.TFRecordWriter):
     Args:
       note_sequence: A NoteSequence proto to write.
     """
-    tf.io.TFRecordWriter.write(self, note_sequence.SerializeToString())
+    TFRecordWriter.write(self, note_sequence.SerializeToString())

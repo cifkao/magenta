@@ -34,7 +34,7 @@ REQUIRED_PACKAGES = [
     'intervaltree >= 2.1.0',
     'librosa >= 0.6.2',
     'mido == 1.2.6',
-    'numpy >= 1.14.6',  # 1.14.6 is required for colab compatibility.
+    'numpy >= 1.14.5',  # 1.14.6 is required for colab compatibility.
     'pandas >= 0.18.1',
     'pretty_midi >= 0.2.6',
     'protobuf >= 3.6.1',
