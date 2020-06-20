@@ -34,6 +34,7 @@ REQUIRED_PACKAGES = [
     'intervaltree >= 2.1.0',
     'librosa >= 0.6.2',
     'mido == 1.2.6',
+    'numba < 0.50',  # temporary fix for https://github.com/librosa/librosa/issues/1160
     'numpy >= 1.14.5',  # 1.14.6 is required for colab compatibility.
     'pandas >= 0.18.1',
     'pretty_midi >= 0.2.6',
